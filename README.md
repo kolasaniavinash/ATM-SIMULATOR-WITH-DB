@@ -1,67 +1,187 @@
+# ATM Simulator with Database
 
-ATM Simulator with Database
-A Java console-based ATM Simulator that uses MySQL and JDBC to store account details and transaction history between runs.
-Educational project only: This is not a real banking application. Do not use real account details or PINs. The sample PIN hashing is for demonstration and is not suitable for production banking.
-Features
-Create an account with an account number, account holder name, PIN, and opening balance
-Log in using account number and PIN
-Check account balance
-Deposit money
-Withdraw money with an insufficient-balance check
-View transaction history with timestamps
-Store account and transaction data in MySQL
-Use prepared statements for database operations
-Use database transactions for balance changes and transaction records
-Technologies
-Java (JDK 17 or later recommended)
-MySQL 8+
-JDBC
-MySQL Connector/J
-Project Files
+A console-based **ATM Simulator developed using Java, MySQL, and JDBC** that allows users to perform basic ATM operations while storing account information and transaction history in a database.
+
+## Project Overview
+
+The ATM Simulator is a menu-driven Java application designed to demonstrate database connectivity and basic banking operations. Users can create an account, log in using their account number and PIN, check their balance, deposit money, withdraw money, and view transaction history.
+
+Unlike a basic banking application that stores data only in memory, this project uses MySQL to maintain account records and transactions between application sessions.
+
+## Features
+
+- **Account Creation:** Create an account with an account number, account holder name, PIN, and opening balance.
+- **User Login:** Log in using an account number and four-digit PIN.
+- **Balance Inquiry:** Check the current account balance.
+- **Cash Deposit:** Deposit money into an account.
+- **Cash Withdrawal:** Withdraw money while checking the available balance.
+- **Transaction History:** View previous deposits and withdrawals with timestamps.
+- **Database Storage:** Store account information and transaction records in MySQL.
+- **Input Validation:** Validate menu selections, PIN format, and monetary amounts.
+- **Prepared Statements:** Use parameterized SQL queries for database operations.
+- **Transaction Management:** Commit successful transactions and roll back unsuccessful database operations.
+
+## Technologies Used
+
+- **Programming Language:** Java
+- **Database:** MySQL
+- **Database Connectivity:** JDBC
+- **JDBC Driver:** MySQL Connector/J
+- **Input Handling:** Scanner
+- **Concepts:** Object-Oriented Programming (OOP), encapsulation, exception handling, SQL queries, and database transactions.
+
+## Project Structure
+
+```text
 ATM-Simulator-with-DB/
+│
 ├── ATM_Simulator.java
 └── README.md
-Database Setup
-Install and start MySQL.
-Create the database using MySQL Workbench or another MySQL client:
+```
+
+## Database Design
+
+The application uses two database tables.
+
+### 1. Accounts Table
+
+Stores account information.
+
+| Column | Description |
+|---|---|
+| account_number | Unique account identifier |
+| account_holder | Account holder's name |
+| pin_hash | Hash of the account PIN |
+| balance | Current account balance |
+
+### 2. Transactions Table
+
+Stores deposit and withdrawal records.
+
+| Column | Description |
+|---|---|
+| transaction_id | Unique transaction identifier |
+| account_number | Associated account number |
+| transaction_type | Deposit or withdrawal |
+| amount | Transaction amount |
+| transaction_time | Date and time of transaction |
+
+A foreign key connects the transactions table to the accounts table.
+
+## Database Setup
+
+### Step 1: Install MySQL
+
+Install MySQL Server and ensure that it is running.
+
+### Step 2: Create the Database
+
+Open MySQL Workbench or another MySQL client and execute:
+
+```sql
 CREATE DATABASE atm_simulator;
-The application creates the accounts and transactions tables when it starts, provided the configured MySQL user has permission to create tables.
-Configure the Connection
-Open ATM_Simulator.java and update these constants for your local MySQL setup:
-private static final String DB_URL = "jdbc:mysql://localhost:3306/atm_simulator";
+```
+
+The application creates the `accounts` and `transactions` tables automatically when it starts, provided the configured MySQL user has the required permissions.
+
+## Configure Database Connectivity
+
+Open `ATM_Simulator.java` and update the database connection settings:
+
+```java
+private static final String DB_URL =
+    "jdbc:mysql://localhost:3306/atm_simulator";
+
 private static final String DB_USER = "root";
-private static final String DB_PASSWORD = "YOUR_MYSQL_PASSWORD";
-Do not commit a real database password to a public GitHub repository. For a real deployment, load credentials from environment variables or a secrets manager.
-Add the MySQL JDBC Driver
-Download MySQL Connector/J from the official MySQL website:
+
+private static final String DB_PASSWORD =
+    "YOUR_MYSQL_PASSWORD";
+```
+
+Replace `YOUR_MYSQL_PASSWORD` with your local MySQL password.
+
+**Security note:** Never upload a real database password to a public GitHub repository. For a safer implementation, load credentials from environment variables or a secrets manager.
+
+## Install the JDBC Driver
+
+Download MySQL Connector/J from the official website:
+
 https://dev.mysql.com/downloads/connector/j/
 
-Add the downloaded JAR to your IDE project's classpath/dependencies. If using IntelliJ IDEA, open File → Project Structure → Modules → Dependencies, add the JAR, and apply the changes. The exact menu may vary by IDE version.
+Add the downloaded JAR file to your Java project's classpath or IDE dependencies.
 
-Run the Application
-Ensure MySQL is running and the atm_simulator database exists.
-Configure the JDBC driver and database connection values.
-Open ATM_Simulator.java in your Java IDE.
-Run the ATM_Simulator class.
-Create an account, then log in to use ATM features.
-Database Tables
-accounts
-Stores account number, account holder, PIN hash, and current balance.
-transactions
-Stores transaction ID, account number, transaction type, amount, and timestamp. Each transaction is linked to an account through a foreign key.
-Important Limitations
-This is a learning/demo project, not a production financial system.
-It does not implement bank-grade authentication, account lockout, audit controls, or regulatory requirements.
-SHA-256 alone is not appropriate for securely storing PINs in a real application. Production systems should use a credential-specific password hashing scheme with a unique salt, plus rate limiting and secure secret management.
-Monetary calculations use Java double for input before converting to BigDecimal; a production implementation should parse and handle money as BigDecimal throughout.
-The account number is a user-provided identifier; the demo does not verify account ownership or connect to a real bank.
-Future Enhancements
-Use environment variables for database credentials
-Use a salted, purpose-built password/PIN hashing algorithm
-Add login attempt limits and account lockout
-Add money transfers between accounts
-Add automated tests and a graphical user interface
-Use BigDecimal end-to-end for monetary values
-License
-For educational and learning purposes.
-⋮⋮⋮⋮⋮⋮⋮⋮
+## How to Run
+
+1. Install the Java Development Kit (JDK 17 or later recommended).
+2. Install and start MySQL Server.
+3. Create the `atm_simulator` database.
+4. Configure the database connection settings in `ATM_Simulator.java`.
+5. Add MySQL Connector/J to the project's dependencies.
+6. Open `ATM_Simulator.java` in IntelliJ IDEA or another Java IDE.
+7. Run the `ATM_Simulator` class.
+8. Create an account and log in to access the ATM menu.
+
+## Application Menu
+
+```text
+========== ATM SIMULATOR ==========
+1. Create account
+2. Log in
+3. Exit
+```
+
+After logging in, users can choose from:
+
+```text
+========== ACCOUNT MENU ==========
+1. Check balance
+2. Deposit
+3. Withdraw
+4. Transaction history
+5. Log out
+```
+
+## Sample Workflow
+
+1. Create an account with an account number and PIN.
+2. Log in using the account credentials.
+3. Check the account balance.
+4. Deposit or withdraw money.
+5. View the transaction history.
+6. Log out or exit the application.
+
+Account details and transaction records remain in the database after the program closes.
+
+## Learning Outcomes
+
+This project demonstrates practical knowledge of:
+
+- Java classes, objects, and encapsulation
+- JDBC database connectivity
+- SQL table creation and data manipulation
+- Prepared statements and result sets
+- Exception handling
+- Account balance validation
+- Database transactions and rollback
+- Persistent data storage
+
+## Limitations
+
+This is an educational project, not a production banking application. It does not connect to a real bank or process actual financial transactions.
+
+The demo uses basic SHA-256 hashing for PIN storage, which is **not suitable for production authentication**. A real system should use a purpose-built password/PIN hashing method with a unique salt, rate limiting, secure credential storage, and additional security controls. The application also uses Java `double` for monetary input before converting values to `BigDecimal`; a production implementation should handle monetary values using `BigDecimal` throughout.
+
+## Future Enhancements
+
+- Add multiple account types.
+- Implement account lockout and login attempt limits.
+- Add fund transfers between accounts.
+- Use secure PIN hashing and environment-based credentials.
+- Use `BigDecimal` throughout for monetary calculations.
+- Add automated unit and integration tests.
+- Develop a graphical user interface.
+- Add administrator functionality and account management.
+
+## License
+
+This project is intended for educational and learning purposes.
